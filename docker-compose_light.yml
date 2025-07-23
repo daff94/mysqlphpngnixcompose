@@ -1,0 +1,32 @@
+services:
+  database:
+    image: mysql:5.7
+    container_name: database
+    volumes_from:
+      - mysql-data
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin
+    restart: always
+    depends_on:
+      - database
+    environment:
+      PMA_HOST: database
+      MYSQL_ROOT_PASSWORD: secret
+    ports:
+      - "8080:80"
+
+  mysql-data:
+    image: mysql:5.7
+    container_name: mysql-data-container
+    volumes:
+    - /var/lib/mysql
+    command: "true"
